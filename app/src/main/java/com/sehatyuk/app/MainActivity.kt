@@ -1,9 +1,9 @@
 package com.sehatyuk.app
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,12 +18,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnHitungBMR: TextView
     private lateinit var tvHasil: TextView
     private lateinit var layoutHasil: LinearLayout
+    private lateinit var scrollView: ScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inisialisasi komponen UI
         etNama = findViewById(R.id.etNama)
         etBerat = findViewById(R.id.etBerat)
         etTinggi = findViewById(R.id.etTinggi)
@@ -32,8 +32,20 @@ class MainActivity : AppCompatActivity() {
         btnHitungBMR = findViewById(R.id.btnHitungBMR)
         tvHasil = findViewById(R.id.tvHasil)
         layoutHasil = findViewById(R.id.layoutHasil)
+        scrollView = findViewById(R.id.scrollView)
 
-        // Listener tombol BMI
+        // Auto scroll ke field saat fokus
+        val fields = listOf(etNama, etBerat, etTinggi, etUmur)
+        fields.forEach { field ->
+            field.setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) {
+                    scrollView.post {
+                        scrollView.smoothScrollTo(0, view.bottom)
+                    }
+                }
+            }
+        }
+
         btnHitungBMI.setOnClickListener {
             if (validateInput()) {
                 val nama = etNama.text.toString()
@@ -41,10 +53,12 @@ class MainActivity : AppCompatActivity() {
                 val tinggi = etTinggi.text.toString().toDouble()
                 val hasil = calculateBMI(berat, tinggi)
                 tampilkanHasil("Halo, $nama!\n\n$hasil")
+                scrollView.post {
+                    scrollView.smoothScrollTo(0, layoutHasil.top)
+                }
             }
         }
 
-        // Listener tombol BMR
         btnHitungBMR.setOnClickListener {
             if (validateInput()) {
                 val nama = etNama.text.toString()
@@ -59,6 +73,9 @@ class MainActivity : AppCompatActivity() {
                             "Artinya, tubuh Anda membutuhkan sekitar $hasilFormatted kkal\n" +
                             "per hari hanya untuk fungsi dasar tubuh (istirahat total)."
                 )
+                scrollView.post {
+                    scrollView.smoothScrollTo(0, layoutHasil.top)
+                }
             }
         }
     }
@@ -93,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         return "BMI Anda: $bmiFormatted\nKategori: $kategori"
     }
 
-    // FUNCTION 3: Hitung BMR (Mifflin-St Jeor)
+    // FUNCTION 3: Hitung BMR
     private fun calculateBMR(weight: Double, height: Double, age: Int): Double {
         return (10 * weight) + (6.25 * height) - (5 * age) + 5
     }
