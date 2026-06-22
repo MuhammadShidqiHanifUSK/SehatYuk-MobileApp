@@ -14,8 +14,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etBerat: EditText
     private lateinit var etTinggi: EditText
     private lateinit var etUmur: EditText
-    private lateinit var btnHitungBMI: Button
-    private lateinit var btnHitungBMR: Button
+    private lateinit var btnHitungBMI: TextView
+    private lateinit var btnHitungBMR: TextView
     private lateinit var tvHasil: TextView
     private lateinit var layoutHasil: LinearLayout
 
