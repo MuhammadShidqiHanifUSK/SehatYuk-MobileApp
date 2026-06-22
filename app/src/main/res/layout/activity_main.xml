@@ -193,6 +193,7 @@
             </LinearLayout>
 
             <!-- Tombol -->
+            <!-- Tombol Aksi -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -207,10 +208,10 @@
                     android:text="⚖️ Hitung BMI"
                     android:background="@drawable/button_green"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginEnd="6dp"/>
+                    android:layout_marginEnd="5dp"/>
 
                 <TextView
                     android:id="@+id/btnHitungBMR"
@@ -220,10 +221,24 @@
                     android:text="🔥 Hitung BMR"
                     android:background="@drawable/button_blue"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginStart="6dp"/>
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/btnReset"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="🔄 Reset"
+                    android:background="@drawable/button_reset"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginStart="5dp"/>
 
             </LinearLayout>
 

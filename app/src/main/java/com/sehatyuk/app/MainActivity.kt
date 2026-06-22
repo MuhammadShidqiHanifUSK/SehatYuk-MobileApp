@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etUmur: EditText
     private lateinit var btnHitungBMI: TextView
     private lateinit var btnHitungBMR: TextView
+    private lateinit var btnReset: TextView
     private lateinit var tvHasil: TextView
     private lateinit var layoutHasil: LinearLayout
     private lateinit var scrollView: ScrollView
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         etUmur = findViewById(R.id.etUmur)
         btnHitungBMI = findViewById(R.id.btnHitungBMI)
         btnHitungBMR = findViewById(R.id.btnHitungBMR)
+        btnReset = findViewById(R.id.btnReset)
         tvHasil = findViewById(R.id.tvHasil)
         layoutHasil = findViewById(R.id.layoutHasil)
         scrollView = findViewById(R.id.scrollView)
@@ -51,8 +53,8 @@ class MainActivity : AppCompatActivity() {
                 val nama = etNama.text.toString()
                 val berat = etBerat.text.toString().toDouble()
                 val tinggi = etTinggi.text.toString().toDouble()
-                val hasil = calculateBMI(berat, tinggi)
-                tampilkanHasil("Halo, $nama!\n\n$hasil")
+                val (hasilTeks, kategori) = calculateBMI(berat, tinggi)
+                tampilkanHasil("Halo, $nama!\n\n$hasilTeks", kategori)
                 scrollView.post {
                     scrollView.smoothScrollTo(0, layoutHasil.top)
                 }
@@ -70,13 +72,19 @@ class MainActivity : AppCompatActivity() {
                 tampilkanHasil(
                     "Halo, $nama!\n\n" +
                             "BMR Anda: $hasilFormatted kkal/hari\n\n" +
-                            "Artinya, tubuh Anda membutuhkan sekitar $hasilFormatted kkal\n" +
-                            "per hari hanya untuk fungsi dasar tubuh (istirahat total)."
+                            "Artinya, tubuh Anda membutuhkan sekitar\n" +
+                            "$hasilFormatted kkal per hari hanya untuk\n" +
+                            "fungsi dasar tubuh (istirahat total).",
+                    "bmr"
                 )
                 scrollView.post {
                     scrollView.smoothScrollTo(0, layoutHasil.top)
                 }
             }
+        }
+
+        btnReset.setOnClickListener {
+            resetForm()
         }
     }
 
@@ -95,7 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // FUNCTION 2: Hitung BMI & Kategori
-    private fun calculateBMI(weight: Double, height: Double): String {
+    private fun calculateBMI(weight: Double, height: Double): Pair<String, String> {
         val heightInMeter = height / 100
         val bmi = weight / (heightInMeter * heightInMeter)
         val bmiFormatted = String.format("%.2f", bmi)
@@ -107,17 +115,58 @@ class MainActivity : AppCompatActivity() {
             else       -> "Obesitas"
         }
 
-        return "BMI Anda: $bmiFormatted\nKategori: $kategori"
+        val teks = "BMI Anda: $bmiFormatted\nKategori: $kategori"
+        return Pair(teks, kategori)
     }
 
-    // FUNCTION 3: Hitung BMR
+    // FUNCTION 3: Hitung BMR (Mifflin-St Jeor)
     private fun calculateBMR(weight: Double, height: Double, age: Int): Double {
         return (10 * weight) + (6.25 * height) - (5 * age) + 5
     }
 
-    // HELPER: Tampilkan hasil di card
-    private fun tampilkanHasil(pesan: String) {
+    // HELPER: Tampilkan hasil dengan warna dinamis
+    private fun tampilkanHasil(pesan: String, kategori: String) {
         tvHasil.text = pesan
         layoutHasil.visibility = android.view.View.VISIBLE
+
+        val (bgDrawable, titleColor, textColor) = when {
+            kategori.contains("Normal") -> Triple(
+                R.drawable.result_background_normal, "#1B5E20", "#2E7D32"
+            )
+            kategori.contains("Kurus") -> Triple(
+                R.drawable.result_background_info, "#0D47A1", "#1565C0"
+            )
+            kategori.contains("Overweight") -> Triple(
+                R.drawable.result_background_warning, "#E65100", "#F57C00"
+            )
+            kategori.contains("Obesitas") -> Triple(
+                R.drawable.result_background_danger, "#B71C1C", "#C62828"
+            )
+            else -> Triple(
+                R.drawable.result_background_normal, "#1B5E20", "#2E7D32"
+            )
+        }
+
+        layoutHasil.setBackgroundResource(bgDrawable)
+
+        // Update warna judul "Hasil Kalkulasi"
+        val judulLayout = layoutHasil.getChildAt(0) as LinearLayout
+        val judulText = judulLayout.getChildAt(1) as TextView
+        judulText.setTextColor(android.graphics.Color.parseColor(titleColor))
+
+        // Update warna teks hasil
+        tvHasil.setTextColor(android.graphics.Color.parseColor(textColor))
+    }
+
+    // HELPER: Reset form
+    private fun resetForm() {
+        etNama.text.clear()
+        etBerat.text.clear()
+        etTinggi.text.clear()
+        etUmur.text.clear()
+        layoutHasil.visibility = android.view.View.GONE
+        etNama.requestFocus()
+        scrollView.smoothScrollTo(0, 0)
+        Toast.makeText(this, "Form berhasil direset!", Toast.LENGTH_SHORT).show()
     }
 }
