@@ -48,19 +48,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Tombol Hitung BMI
         btnHitungBMI.setOnClickListener {
             if (validateInput()) {
                 val nama = etNama.text.toString()
                 val berat = etBerat.text.toString().toDouble()
                 val tinggi = etTinggi.text.toString().toDouble()
-                val (hasilTeks, kategori) = calculateBMI(berat, tinggi)
-                tampilkanHasil("Halo, $nama!\n\n$hasilTeks", kategori)
+                val hasil = calculateBMI(berat, tinggi)
+
+                // Hitung ulang untuk keperluan warna card
+                val bmi = berat / ((tinggi / 100) * (tinggi / 100))
+                val kategori = when {
+                    bmi < 18.5 -> "Kurus"
+                    bmi < 25.0 -> "Normal"
+                    else -> "Kelebihan Berat Badan"
+                }
+
+                tampilkanHasil("Halo, $nama!\n\n$hasil", kategori)
                 scrollView.post {
                     scrollView.smoothScrollTo(0, layoutHasil.top)
                 }
             }
         }
 
+        // Tombol Hitung BMR
         btnHitungBMR.setOnClickListener {
             if (validateInput()) {
                 val nama = etNama.text.toString()
@@ -69,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 val umur = etUmur.text.toString().toInt()
                 val hasil = calculateBMR(berat, tinggi, umur)
                 val hasilFormatted = String.format("%.2f", hasil)
+
                 tampilkanHasil(
                     "Halo, $nama!\n\n" +
                             "BMR Anda: $hasilFormatted kkal/hari\n\n" +
@@ -83,12 +95,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Tombol Reset
         btnReset.setOnClickListener {
             resetForm()
         }
     }
 
     // FUNCTION 1: Validasi Input
+    // Return: Boolean — true jika semua field terisi
     private fun validateInput(): Boolean {
         val nama = etNama.text.toString().trim()
         val berat = etBerat.text.toString().trim()
@@ -103,23 +117,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     // FUNCTION 2: Hitung BMI & Kategori
-    private fun calculateBMI(weight: Double, height: Double): Pair<String, String> {
+    // Rumus: BMI = berat(kg) / (tinggi(cm) / 100)^2
+    // Return: String — nilai BMI + kategori
+    private fun calculateBMI(weight: Double, height: Double): String {
         val heightInMeter = height / 100
         val bmi = weight / (heightInMeter * heightInMeter)
         val bmiFormatted = String.format("%.2f", bmi)
 
         val kategori = when {
-            bmi < 18.5 -> "Kurus (Underweight)"
+            bmi < 18.5 -> "Kurus"
             bmi < 25.0 -> "Normal"
-            bmi < 30.0 -> "Kelebihan Berat Badan (Overweight)"
-            else       -> "Obesitas"
+            else       -> "Kelebihan Berat Badan"
         }
 
-        val teks = "BMI Anda: $bmiFormatted\nKategori: $kategori"
-        return Pair(teks, kategori)
+        return "BMI Anda: $bmiFormatted ($kategori)"
     }
 
-    // FUNCTION 3: Hitung BMR (Mifflin-St Jeor)
+    // FUNCTION 3: Hitung BMR
+    // Rumus: (10 x berat) + (6.25 x tinggi) - (5 x umur) + 5
+    // Return: Double — nilai BMR dalam kkal/hari
     private fun calculateBMR(weight: Double, height: Double, age: Int): Double {
         return (10 * weight) + (6.25 * height) - (5 * age) + 5
     }
@@ -136,11 +152,8 @@ class MainActivity : AppCompatActivity() {
             kategori.contains("Kurus") -> Triple(
                 R.drawable.result_background_info, "#0D47A1", "#1565C0"
             )
-            kategori.contains("Overweight") -> Triple(
+            kategori.contains("Kelebihan") -> Triple(
                 R.drawable.result_background_warning, "#E65100", "#F57C00"
-            )
-            kategori.contains("Obesitas") -> Triple(
-                R.drawable.result_background_danger, "#B71C1C", "#C62828"
             )
             else -> Triple(
                 R.drawable.result_background_normal, "#1B5E20", "#2E7D32"
@@ -149,16 +162,13 @@ class MainActivity : AppCompatActivity() {
 
         layoutHasil.setBackgroundResource(bgDrawable)
 
-        // Update warna judul "Hasil Kalkulasi"
         val judulLayout = layoutHasil.getChildAt(0) as LinearLayout
         val judulText = judulLayout.getChildAt(1) as TextView
         judulText.setTextColor(android.graphics.Color.parseColor(titleColor))
-
-        // Update warna teks hasil
         tvHasil.setTextColor(android.graphics.Color.parseColor(textColor))
     }
 
-    // HELPER: Reset form
+    // HELPER: Reset semua field & sembunyikan hasil
     private fun resetForm() {
         etNama.text.clear()
         etBerat.text.clear()
