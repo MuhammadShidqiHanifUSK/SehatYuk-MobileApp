@@ -122,14 +122,14 @@ SehatYuk/
 │               └── result_background_info.xml
 ├── docs/
 │   ├── screenshots/
-│   │   ├── home.jpg
-│   │   ├── hasil_bmi.jpg
-│   │   ├── hasil_bmr.jpg
-│   │   ├── input_nama.jpg
-│   │   ├── input_bb.jpg
-│   │   ├── test_input_kosong.jpg
-│   │   └── reset_button.jpg
-│   └── SehatYuk_Presentation.pptx
+│   │   ├── home.jpeg
+│   │   ├── hasil_bmi.jpeg
+│   │   ├── hasil_bmr.jpeg
+│   │   ├── input_nama.jpeg
+│   │   ├── input_bb.jpeg
+│   │   ├── test_input_kosong.jpeg
+│   │   └── reset_button.jpeg
+│   └── 2408107010096_MuhammadShidqiHanif_SlidePPT.pdf
 ├── LICENSE
 └── README.md
 ```
