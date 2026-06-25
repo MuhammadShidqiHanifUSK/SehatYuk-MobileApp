@@ -21,6 +21,19 @@ Aplikasi Android sederhana untuk memantau indikator kesehatan dasar (BMI & BMR) 
 
 ---
 
+## 🔗 Link Pengumpulan
+
+### 🐙 GitHub Repository
+[![GitHub](https://img.shields.io/badge/GitHub-SehatYuk--MobileApp-181717?logo=github)](https://github.com/MuhammadShidqiHanifUSK/SehatYuk-MobileApp)
+
+🔗 https://github.com/MuhammadShidqiHanifUSK/SehatYuk-MobileApp
+
+### ▶️ Video YouTube
+[![YouTube](https://img.shields.io/badge/YouTube-Demo%20SehatYuk-FF0000?logo=youtube)](https://youtu.be/1-DtlE-br3c?si=QpDYsP5zTQ3MqQaa)
+
+🔗 https://youtu.be/1-DtlE-br3c?si=QpDYsP5zTQ3MqQaa
+
+---
 ## 📱 Tentang Aplikasi
 
 **SehatYuk** adalah prototipe aplikasi Android untuk klinik kesehatan digital yang membantu pengguna memantau dua indikator kesehatan dasar:
